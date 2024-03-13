@@ -155,7 +155,18 @@ def insert_novelty_tx(novel_tx_dict, combined_tx_dict):
         if xloc in combined_tx_dict.keys():
 
             old_values = combined_tx_dict[xloc]
-            combined_tx_dict[xloc] = old_values + gtf_lines
+            new_values = []
+            for line in gtf_lines:
+                fields = line.split("\t")
+                column_9 = fields[8].split(";")
+                tmp = column_9[0]
+                column_9[0] = column_9[1].strip()
+                column_9[1] = " " + tmp
+                fields[8] = ";".join(column_9)
+                line = "\t".join(fields)
+                new_values.append(line)
+
+            combined_tx_dict[xloc] = old_values + new_values
 
             for i in range(len(gtf_lines)):
                 fields       = gtf_lines[i].split("\t")
