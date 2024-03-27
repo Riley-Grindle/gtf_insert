@@ -38,21 +38,11 @@ def find_novel_transcripts(gtf, reference_gtf_path, novel_class_codes, tracking)
             target_class_code = class_code in novel_class_codes
             if target_class_code:
                 column_nine = fields[8].split(";")
-                if 'cmp_ref "' in fields[8]:
-                    tmp = column_nine[3]
-                    if tmp[10:-1] in tx_keys:
-                         column_nine[1] = "gene_id " + "\"" + tracking_dict[column_nine[3][10:-1]] + "\""
-                         tmp = column_nine[0]
-                         column_nine[0] = column_nine[1].strip()
-                         column_nine[1] = " " + tmp
-                    column_nine = ";".join(column_nine)
-                    fields[8] = column_nine
-                else:
-                    tmp = column_nine[0]
-                    column_nine[0] = column_nine[1].strip()
-                    column_nine[1] = " " + tmp
-                    column_nine = ";".join(column_nine)
-                    fields[8] = column_nine
+                tmp = column_nine[0]
+                column_nine[0] = column_nine[1].strip()
+                column_nine[1] = " " + tmp
+                column_nine = ";".join(column_nine)
+                fields[8] = column_nine
                 new_line = "\t".join(fields) + "\n"
                 novel_transcript_lines.append(new_line)
 
@@ -75,5 +65,8 @@ def find_novel_transcripts(gtf, reference_gtf_path, novel_class_codes, tracking)
         output_file.writelines(reference_gtf_lines + novel_transcript_lines)
 
     return output_gtf_name
+
+
+
 
 output_gtf_path = find_novel_transcripts(path_to_gffcmp_gtf, path_to_newest_gtf,novel_class_codes, path_to_tracking)

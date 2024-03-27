@@ -109,7 +109,7 @@ def find_union_genes(loci_dict, gtf_dict):
     # --done-- the new key = the XLOC that is the loci_dict key
     # --done-- update the new gtf lines under the new XLOC key with gene_ids that match the XLOC, 
     # --done-- return unioned dict
-
+    
     for key, value, in loci_dict.items():
         
         if len(value) > 1:
@@ -136,6 +136,8 @@ def find_union_genes(loci_dict, gtf_dict):
                 tmp_value[i] = line
 
             gtf_dict[key] = tmp_value
+    
+    
     
     return gtf_dict
 
@@ -207,7 +209,7 @@ def sort_xlocs(fully_combined_inserted_dict):
                         sorted_line_list.append(line.strip())
 
                     else:
-                        new_gene_level = fields[0] + "\tStringTie" + "\tgene" + "\t0" + "\t0" + "\t" + fields[5] + "\t" + fields[6] + "\t" + fields[7] + "\tID=" + key + ";gene_id=" + key + ";gene_name=" + key
+                        new_gene_level = fields[0] + "\tStringTie" + "\tgene" + "\t0" + "\t0" + "\t" + fields[5] + "\t" + fields[6] + "\t" + fields[7] + "\tgene_id " + "\"" + key + "\"" + ";gene_name " + "\"" + key + "\""
                         sorted_line_list.append(new_gene_level)
                         sorted_line_list.append(line.strip())
                 else:
@@ -311,7 +313,7 @@ def main():
     #########################################################################
     # Update gtf genes to XLOCs if more than one gene is spanned by an XLOC #
 
-    unionized_dict = find_union_genes(xloc_2_gene_dict, reference_inserted_dict)
+    unionized_dict  = find_union_genes(xloc_2_gene_dict, reference_inserted_dict)
 
     #                                                                        #
     ##########################################################################
@@ -349,7 +351,6 @@ def main():
     with open("joined_genes_w_spanning_txs.json", "w") as new_json:
         json.dump(sorted_inserted_novels_overlaps_refs, new_json, indent=4)
     
-
 
 if __name__ == "__main__":
 
