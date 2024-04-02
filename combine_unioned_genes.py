@@ -209,7 +209,7 @@ def sort_xlocs(fully_combined_inserted_dict):
                         sorted_line_list.append(line.strip())
 
                     else:
-                        new_gene_level = fields[0] + "\tStringTie" + "\tgene" + "\t0" + "\t0" + "\t" + fields[5] + "\t" + fields[6] + "\t" + fields[7] + "\tgene_id " + "\"" + key + "\"" + ";gene_name " + "\"" + key + "\""
+                        new_gene_level = fields[0] + "\tStringTie" + "\tgene" + "\t0" + "\t0" + "\t" + fields[5] + "\t" + fields[6] + "\t" + fields[7] + "\tgene_id " + "\"" + key + "\"" + "; gene_name " + "\"" + key + "\""
                         sorted_line_list.append(new_gene_level)
                         sorted_line_list.append(line.strip())
                 else:
