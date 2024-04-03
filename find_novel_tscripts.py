@@ -9,7 +9,7 @@ path_to_newest_gtf = sys.argv[2]
 path_to_tracking = sys.argv[3]
 
 # Convert the JSON string to a Python list
-novel_class_codes = ["r", "u", "i", "y", "p"]
+novel_class_codes = ["r", "u", "i", "y", "p", "o", "s", "x"]
 
 def find_novel_transcripts(gtf, reference_gtf_path, novel_class_codes, tracking):
 
