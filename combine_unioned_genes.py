@@ -187,7 +187,7 @@ def insert_novelty_tx(novel_tx_dict, combined_tx_dict):
     
     return combined_tx_dict, inserted_ids
 
-def sort_xlocs(fully_combined_inserted_dict):
+def sort_xlocs(fully_combined_inserted_dict, prefix):
 
     # TO DO : 
     # ------- Identify keys that are XLOCs and sort values at the transcript level
@@ -199,7 +199,7 @@ def sort_xlocs(fully_combined_inserted_dict):
     counter = 0
     for key, value in fully_combined_inserted_dict.items():
 
-        if key[:4] == "XLOC":
+        if prefix in key:
             counter += 1
 
             sorted_line_list = []
@@ -294,14 +294,21 @@ def main():
 
         print("\nInput gffcompare loci file was not found or does not exist.\n")
 
+    try:
+        gene_prefix = sys.argv[4]
+
+    except IndexError:
+
+        print("\nGene prefix identifier not passed into tool.\n")
+
     ##############################################################################
     ##############################################################################
         
     ################################################    
-    #      Create dict with XLOC : GTF lines       #  
+    #      Create dict with GENE prefix : GTF lines       #  
     
     sub_str   = ' class_code \".\"'
-    sub_str_1 = 'XLOC_......'
+    sub_str_1 = gene_prefix + '_......'
 
     novel_tx_dict = generate_tx_ex_dict(gtf_list , sub_str, sub_str_1)
         
@@ -309,25 +316,25 @@ def main():
     #################################################
 
     ###########################################
-    #     Generate XLOC 2 GENE id Dict  &     #
+    #     Generate GENE prefix 2 GENE id Dict  &     #
     #   search updated gtf json for matches   #
 
     
-    xloc_2_gene_dict = generate_xloc_2_gene_dict(loci_lines)
+    gene_2_gene_dict = generate_xloc_2_gene_dict(loci_lines)
 
-    #      XLOC 2 GENE ID dict generated      #
+    #      GENE prefix 2 GENE ID dict generated      #
     ###########################################
 
     #########################################################################
-    # Update gtf genes to XLOCs if more than one gene is spanned by an XLOC #
+    # Update gtf genes to GENE prefix if more than one gene is spanned by an GENE prefix #
 
-    unionized_dict  = find_union_genes(xloc_2_gene_dict, reference_inserted_dict)
+    unionized_dict  = find_union_genes(gene_2_gene_dict, reference_inserted_dict)
 
     #                                                                        #
     ##########################################################################
 
     ################################################################
-    # Insert novel transcripts that share XLOCs with unioned genes #
+    # Insert novel transcripts that share GENE prefix with unioned genes #
 
     inserted_novel_tx_dict, deletion_ids = insert_novelty_tx(novel_tx_dict, unionized_dict)
 
@@ -337,7 +344,7 @@ def main():
     ###########################################################################################################
     # Sort unionized genes, remove uneeded gene levels, add total bounding gene level with updated start-stop #
 
-    sorted_inserted_novels_overlaps_refs = sort_xlocs(inserted_novel_tx_dict)
+    sorted_inserted_novels_overlaps_refs = sort_xlocs(inserted_novel_tx_dict, gene_prefix)
 
     ###########################################################################
     # Delete all_double.combined.gtf lines that have been inserted into .json #

@@ -157,14 +157,21 @@ def main():
 
         print("\nInput gffcompare loci file was not found or does not exist.\n")
 
+    try:
+        gene_prefix = sys.argv[4]
+
+    except IndexError:
+
+        print("\nGene prefix identifier not passed into tool.\n")
+
     ##############################################################################
     ##############################################################################
         
     ################################################    
-    #      Create dict with XLOC : GTF lines       #  
+    #      Create dict with GENE prefix : GTF lines       #  
     
     sub_str   = ' class_code \".\"'
-    sub_str_1 = 'XLOC_......'
+    sub_str_1 = gene_prefix + '_......'
 
     novel_tx_dict = generate_tx_ex_dict(gtf_list , sub_str, sub_str_1)
         
@@ -172,20 +179,20 @@ def main():
     #################################################
         
     ###########################################
-    #     Generate XLOC 2 GENE id Dict  &     #
+    #     Generate GENE prefix 2 GENE id Dict  &     #
     #   search updated gtf json for matches   #
 
-    xloc_2_gene_dict = generate_xloc_2_gene_dict(loci_lines)
+    prefix_2_gene_dict = generate_xloc_2_gene_dict(loci_lines)
 
-    #      XLOC 2 GENE ID dict generated      #
+    #      GENE prefix 2 GENE ID dict generated      #
     ###########################################
 
     ####################################################
-    # Insert Novel txs that share XLOCs w/ overlap txs #
+    # Insert Novel txs that share GENE prefix w/ overlap txs #
 
-    inserted_novel_overlaps, deletion_ids = insert_novelty_tx(novel_tx_dict, xloc_2_gene_dict, updated_gene_id_gtf_dict)
+    inserted_novel_overlaps, deletion_ids = insert_novelty_tx(novel_tx_dict, prefix_2_gene_dict, updated_gene_id_gtf_dict)
 
-    # Novel Txs that share XLOCs w/ overlaps inserted  #
+    # Novel Txs that share GENE prefix w/ overlaps inserted  #
     ####################################################
     
     ###########################################################################
