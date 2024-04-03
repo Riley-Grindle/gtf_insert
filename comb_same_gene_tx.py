@@ -7,7 +7,7 @@ import re
 
 def get_novel_tx(class_code):
     """"""
-    novel_class_codes = ["r", "u", "i", "y", "p"]
+    novel_class_codes = ["u", "y", "p"]
 
     if class_code[-2] in novel_class_codes:
         return True
@@ -39,7 +39,9 @@ def generate_tx_ex_dict(gtf_list, sub_str, sub_str_1):
     """"""
 
     tmp_dict = {}
+    tx_ids = []
     for i in range(len(gtf_list)):
+        is_novel = False
 
         ##########################################
         # Searching for class code str in gtf data
@@ -61,9 +63,11 @@ def generate_tx_ex_dict(gtf_list, sub_str, sub_str_1):
         # Adding novel tx's
         if is_novel:
             tmp_dict[fields[8].split(sep=";")[1][-12:-1]] = [line]
+            tx_ids.append(fields[8].split(";")[0])
+        
 
         # Adding Exons to tx's
-        elif not is_novel and isinstance(tmp_dict, dict) and fields[2] == 'exon':
+        elif not is_novel and isinstance(tmp_dict, dict) and fields[2] == 'exon' and fields[8].split(";")[0] in tx_ids:
             tmp  = re.compile(sub_str_1)
             hit  = tmp.search(line)
             xloc = str(hit.group(0))

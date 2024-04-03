@@ -113,10 +113,14 @@ def find_union_genes(loci_dict, gtf_dict):
     for key, value, in loci_dict.items():
         
         if len(value) > 1:
+            if len(value) >= 6:
+                print(key)
             tmp_value = []
+            combined_ids = []
             for id in value:
                 
                 if id in gtf_dict.keys():
+                    combined_ids.append(id)
                     tmp_value = tmp_value + gtf_dict[id]
                     del gtf_dict[id]
 
@@ -134,8 +138,12 @@ def find_union_genes(loci_dict, gtf_dict):
                 fields[8] = ";".join(column_9)
                 line = "\t".join(fields).strip()
                 tmp_value[i] = line
+            
+            combined_str = ''
+            for id in combined_ids:
+                combined_str = combined_str + id + ", "
 
-            gtf_dict[key] = tmp_value
+            gtf_dict[key] = [tmp_value, combined_str[:-2]]
     
     
     
@@ -196,9 +204,9 @@ def sort_xlocs(fully_combined_inserted_dict):
 
             sorted_line_list = []
             other_list = []
-            for i in range(len(value)):
+            for i in range(len(value[0])):
 
-                line = value[i]
+                line = value[0][i]
                 fields = line.split("\t")
                 
                 if fields[2] == "gene":
@@ -209,7 +217,7 @@ def sort_xlocs(fully_combined_inserted_dict):
                         sorted_line_list.append(line.strip())
 
                     else:
-                        new_gene_level = fields[0] + "\tStringTie" + "\tgene" + "\t0" + "\t0" + "\t" + fields[5] + "\t" + fields[6] + "\t" + fields[7] + "\tgene_id " + "\"" + key + "\"" + "; gene_name " + "\"" + key + "\""
+                        new_gene_level = fields[0] + "\tStringTie" + "\tgene" + "\t0" + "\t0" + "\t" + fields[5] + "\t" + fields[6] + "\t" + fields[7] + "\tgene_id " + "\"" + key + "\"" + "; gene_name " + "\"" + key + "\"" + "; combined_IDs " + "\"" + value[1] + "\""
                         sorted_line_list.append(new_gene_level)
                         sorted_line_list.append(line.strip())
                 else:
