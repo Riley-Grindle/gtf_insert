@@ -141,9 +141,9 @@ def find_union_genes(loci_dict, gtf_dict):
             
             combined_str = ''
             for id in combined_ids:
-                combined_str = combined_str + id + ", "
+                combined_str = combined_str + id + ","
 
-            gtf_dict[key] = [tmp_value, combined_str[:-2]]
+            gtf_dict[key] = [tmp_value, combined_str[:-1]]
     
     
     
