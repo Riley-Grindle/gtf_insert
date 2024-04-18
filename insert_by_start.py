@@ -54,8 +54,11 @@ for cmp_ref, lines in cmp_ref_data.items():
         cmp_ref_value = separate_transcripts_with_same_cmp_ref_geneID(lines)
         reference_value = separate_transcripts_with_same_cmp_ref_geneID(reference_data[cmp_ref])
         
+        count += 1
         for cmp_ref_start_position, cmp_ref_lines in sorted(cmp_ref_value.items(), key=lambda item: item[0], reverse=True):
+
             inserted = False
+
             for reference_start_position, reference_lines in reference_value.items():
                 
                 # Updating gene start/stop if transcript extends it
@@ -75,22 +78,36 @@ for cmp_ref, lines in cmp_ref_data.items():
 
                     reference_lines[0] = "\t".join(fields)
                     reference_value[reference_start_position] = reference_lines
-
                 
 
                 if reference_start_position.isdigit() and int(cmp_ref_start_position) <= int(reference_start_position):
+
                     reference_value[reference_start_position] = cmp_ref_lines + reference_lines
                     inserted = True
                     break
                 
-
+            
             if not inserted:
+
+                id_key = fields[8].split(";")[0]
+
                 last_transcript_key = find_last_transcript_key(reference_value)
+                try :
+                    if tmp_id_key == id_key:
+                        index = index
+                    else:
+                        index = len(reference_value[last_transcript_key])
+
+                except NameError:
+                    index = len(reference_value[last_transcript_key])
+
                 if last_transcript_key is not None:
-                    reference_value[last_transcript_key].extend(cmp_ref_lines)
+                    reference_value[last_transcript_key] = reference_value[last_transcript_key][:index] + cmp_ref_lines + reference_value[last_transcript_key][index:]
                 else:
                     unique_key = f'unique_end_key_{cmp_ref_start_position}'
                     reference_value[unique_key] = cmp_ref_lines
+
+                tmp_id_key = id_key
 
 
         reference_data[cmp_ref] = [line for sublist in reference_value.values() for line in sublist]

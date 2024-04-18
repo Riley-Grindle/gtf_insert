@@ -9,7 +9,7 @@ path_to_newest_gtf = sys.argv[2]
 path_to_tracking = sys.argv[3]
 
 # Convert the JSON string to a Python list
-novel_class_codes = ["r", "u", "i", "y", "p", "o", "s", "x"]
+novel_class_codes = ["r", "u", "i", "y", "p", "s", "x"]
 
 def find_novel_transcripts(gtf, reference_gtf_path, novel_class_codes, tracking):
 
@@ -36,6 +36,18 @@ def find_novel_transcripts(gtf, reference_gtf_path, novel_class_codes, tracking)
         if fields[2] == "transcript" and 'class_code "' in fields[8]:
             class_code = fields[8].split('class_code "')[1][0]
             target_class_code = class_code in novel_class_codes
+            if class_code == "i":
+                column_nine = fields[8].split(";")
+                new_col9 = column_nine[0:2]
+                for i in range(len(column_nine)):
+                    if "class_code" in column_nine[i]:
+                        new_col9.append(column_nine[i])
+                
+                fields[8] = ";".join(new_col9)
+                i_key = True
+            else:
+                i_key = False
+
             if target_class_code:
                 column_nine = fields[8].split(";")
                 tmp = column_nine[0]
@@ -45,12 +57,15 @@ def find_novel_transcripts(gtf, reference_gtf_path, novel_class_codes, tracking)
                 fields[8] = column_nine
                 new_line = "\t".join(fields) + "\n"
                 novel_transcript_lines.append(new_line)
+            
 
         elif target_class_code:
             column_nine = fields[8].split(";")
             tmp = column_nine[0]
             column_nine[0] = column_nine[1].strip()
             column_nine[1] = " " + tmp
+            if i_key:
+                column_nine = column_nine[0:2]
             column_nine = ";".join(column_nine)
             fields[8] = column_nine
             new_line = "\t".join(fields) + "\n"

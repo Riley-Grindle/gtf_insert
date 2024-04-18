@@ -8,7 +8,7 @@ path_to_gtf = sys.argv[1]
 
 
 # Assuming overlapClassCodes is passed as '["k", "m", "n", "j", "e"]'
-overlap_class_codes = ["k", "m", "n", "j", "e"]
+overlap_class_codes = ["k", "m", "n", "j", "e", "o"]
 
 
 def find_overlap_transcript(gtf, overlap_class_codes):
