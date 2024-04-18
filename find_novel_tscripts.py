@@ -65,7 +65,7 @@ def find_novel_transcripts(gtf, reference_gtf_path, novel_class_codes, tracking)
             column_nine[0] = column_nine[1].strip()
             column_nine[1] = " " + tmp
             if i_key:
-                column_nine = column_nine[0:2]
+                column_nine = column_nine[0:3]
             column_nine = ";".join(column_nine)
             fields[8] = column_nine
             new_line = "\t".join(fields) + "\n"
