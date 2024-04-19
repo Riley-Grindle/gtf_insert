@@ -308,7 +308,7 @@ def main():
     #      Create dict with GENE prefix : GTF lines       #  
     
     sub_str   = ' class_code \".\"'
-    sub_str_1 = gene_prefix + ':G_......'
+    sub_str_1 = gene_prefix + 'G_......'
 
     novel_tx_dict = generate_tx_ex_dict(gtf_list , sub_str, sub_str_1)
         
