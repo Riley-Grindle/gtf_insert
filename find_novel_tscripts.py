@@ -7,11 +7,12 @@ import sys
 path_to_gffcmp_gtf = sys.argv[1]
 path_to_newest_gtf = sys.argv[2]
 path_to_tracking = sys.argv[3]
+meta_id = sys.argv[4]
 
 # Convert the JSON string to a Python list
 novel_class_codes = ["r", "u", "i", "y", "p", "s", "x"]
 
-def find_novel_transcripts(gtf, reference_gtf_path, novel_class_codes, tracking):
+def find_novel_transcripts(gtf, reference_gtf_path, novel_class_codes, tracking, meta_id):
 
 
     # Generate output file name based on combined GTF file
@@ -74,9 +75,10 @@ def find_novel_transcripts(gtf, reference_gtf_path, novel_class_codes, tracking)
     # Read the reference GTF file and append the novel transcript lines
     with open(reference_gtf_path, 'r') as ref_file:
         reference_gtf_lines = ref_file.readlines()
-
+    
+    filename = meta_id + "final_annotation.gtf"
     # Write the combined reference and novel transcript lines to the output GTF file
-    with open("final_annotation.gtf", 'w') as output_file:
+    with open(filename, 'w') as output_file:
         output_file.writelines(reference_gtf_lines + novel_transcript_lines)
 
     return output_gtf_name
@@ -84,4 +86,4 @@ def find_novel_transcripts(gtf, reference_gtf_path, novel_class_codes, tracking)
 
 
 
-output_gtf_path = find_novel_transcripts(path_to_gffcmp_gtf, path_to_newest_gtf,novel_class_codes, path_to_tracking)
+output_gtf_path = find_novel_transcripts(path_to_gffcmp_gtf, path_to_newest_gtf,novel_class_codes, path_to_tracking, meta_id)
