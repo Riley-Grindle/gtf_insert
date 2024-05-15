@@ -37,18 +37,7 @@ def find_novel_transcripts(gtf, reference_gtf_path, novel_class_codes, tracking,
         if fields[2] == "transcript" and 'class_code "' in fields[8]:
             class_code = fields[8].split('class_code "')[1][0]
             target_class_code = class_code in novel_class_codes
-            if class_code == "i":
-                column_nine = fields[8].split(";")
-                new_col9 = column_nine[0:2]
-                for i in range(len(column_nine)):
-                    if "class_code" in column_nine[i]:
-                        new_col9.append(column_nine[i])
                 
-                fields[8] = ";".join(new_col9)
-                i_key = True
-            else:
-                i_key = False
-
             if target_class_code:
                 column_nine = fields[8].split(";")
                 tmp = column_nine[0]
@@ -56,6 +45,12 @@ def find_novel_transcripts(gtf, reference_gtf_path, novel_class_codes, tracking,
                 column_nine[1] = " " + tmp
                 column_nine = ";".join(column_nine)
                 fields[8] = column_nine
+                column_nine = fields[8].split(";")
+                new_col9 = column_nine[0:2]
+                for i in range(len(column_nine)):
+                    if "class_code" in column_nine[i]:
+                        new_col9.append(column_nine[i])
+                fields[8] = ";".join(new_col9)
                 new_line = "\t".join(fields) + "\n"
                 novel_transcript_lines.append(new_line)
             
@@ -65,8 +60,7 @@ def find_novel_transcripts(gtf, reference_gtf_path, novel_class_codes, tracking,
             tmp = column_nine[0]
             column_nine[0] = column_nine[1].strip()
             column_nine[1] = " " + tmp
-            if i_key:
-                column_nine = column_nine[0:3]
+            column_nine = column_nine[0:3]
             column_nine = ";".join(column_nine)
             fields[8] = column_nine
             new_line = "\t".join(fields) + "\n"
@@ -76,7 +70,7 @@ def find_novel_transcripts(gtf, reference_gtf_path, novel_class_codes, tracking,
     with open(reference_gtf_path, 'r') as ref_file:
         reference_gtf_lines = ref_file.readlines()
     
-    filename = meta_id + "final_annotation.gtf"
+    filename = meta_id + ".final_annotation.gtf"
     # Write the combined reference and novel transcript lines to the output GTF file
     with open(filename, 'w') as output_file:
         output_file.writelines(reference_gtf_lines + novel_transcript_lines)

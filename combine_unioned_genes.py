@@ -128,13 +128,18 @@ def find_union_genes(loci_dict, gtf_dict):
                 line = tmp_value[i]
                 fields = line.split("\t")
                 column_9 = fields[8].split(";")
+                counters = {}
                 counter = 0
                 for meta in column_9:
                     if "gene_id" in meta:
                         meta = "gene_id \"" + key + "\""
-                        break
+                        counters[counter] = meta
+                    if " gene_name" in meta:
+                        meta = " gene_name \"" + key + "\""
+                        counters[counter] = meta
                     counter += 1
-                column_9[counter] = meta
+                for index in list(counters.keys()):
+                    column_9[index] = counters[index]
                 fields[8] = ";".join(column_9)
                 line = "\t".join(fields).strip()
                 tmp_value[i] = line
